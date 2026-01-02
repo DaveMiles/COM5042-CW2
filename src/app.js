@@ -68,8 +68,7 @@ class SmartHomeApp {
             this.loggedInMenu();
             break;
           case '2':
-            console.log('Controlling device... (not implemented)');
-            this.controlDevicesMenu();
+            this.controlDevice();
             break;
           case '3':
             console.log('Logging out...');
@@ -83,69 +82,55 @@ class SmartHomeApp {
     );
   }
 
-  controlDevicesMenu() {
+  controlDevice() {
+    console.log(this.deviceManager.listDevices());
     this.rl.question(
-      `Select one of the following options:\n  1) Toggle Device\n  2) Back to Main Menu\n> `,
+      "\nEnter Device ID to toggle, or enter 'back' to go back: ",
       (input) => {
-        switch (input.trim()) {
-          case '1':
-            this.controlDevice();
-            break;
-          case '2':
-            this.controlDevicesMenu();
-            break;
-          case '2':
-            this.loggedInMenu();
-            break;
-          default:
-            console.log('Invalid option, please try again.');
-            this.controlDevicesMenu();
+        if (input.trim() === 'back') {
+          this.loggedInMenu();
+          return;
+        }
+        const device = this.deviceManager
+          .getUserDevices()
+          .find((d) => d.id === parseInt(input.trim()));
+        if (device) {
+          switch (device.type) {
+            case 'lightbulb':
+              const currentStatus = device.status;
+              const alternativeStatus = currentStatus === 'on' ? 'off' : 'on';
+              this.rl.question(
+                `Device is ${currentStatus}, would you like to turn it ${alternativeStatus}? (yes/no): `,
+                (answer) => {
+                  if (answer.trim().toLowerCase() === 'yes') {
+                    device.status = alternativeStatus;
+                    console.log(`Device turned ${alternativeStatus}.`);
+                  } else {
+                    console.log('No changes made to the device.');
+                  }
+                  this.controlDevice();
+                }
+              );
+              break;
+            case 'thermostat':
+              // TODO: Implement thermostat control
+              break;
+            case 'alarm':
+              // TODO: Implement alarm control
+              break;
+            case 'camera':
+              // TODO: Implement camera control
+              break;
+            default:
+              console.log('Unknown device type.');
+              this.loggedInMenu();
+          }
+        } else {
+          console.log('Device not found.');
+          this.loggedInMenu();
         }
       }
     );
-  }
-
-  controlDevice() {
-    console.log(DeviceManager.listDevices());
-    this.rl.question('Enter Device ID to toggle: ', (deviceId) => {
-      const device = this.deviceManager
-        .getUserDevices()
-        .find((d) => d.id === deviceId.trim());
-      if (device) {
-        switch (device.type) {
-          case 'lightbulb':
-            const currentStatus = device.status;
-            const alternativeStatus = currentStatus === 'on' ? 'off' : 'on';
-            this.rl.question(
-              `Device is ${currentStatus}, would you like to turn it ${alternativeStatus}? (yes/no): `,
-              (answer) => {
-                if (answer.trim().toLowerCase() === 'yes') {
-                  device.status = alternativeStatus;
-                  console.log(`Device turned ${alternativeStatus}.`);
-                } else {
-                  console.log('No changes made to the device.');
-                }
-                this.controlDevicesMenu();
-              }
-            );
-            break;
-          case 'thermostat':
-            // TODO: Implement thermostat control
-            break;
-          case 'alarm':
-            // TODO: Implement alarm control
-            break;
-          case 'camera':
-            // TODO: Implement camera control
-            break;
-          default:
-            console.log('Unknown device type.');
-        }
-      } else {
-        console.log('Device not found.');
-      }
-      this.controlDevicesMenu();
-    });
   }
 }
 
