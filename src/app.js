@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const readline = require('readline');
+const fs = require('fs');
+const path = require('path');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -32,6 +34,24 @@ function exit() {
   console.log('Goodbye!');
   rl.close();
 }
-function login() {}
+function login() {
+  const usersPath = path.join(__dirname, '../database/users.json');
+  const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+
+  rl.question('Enter username: ', (username) => {
+    rl.question('Enter password: ', (password) => {
+      const user = users.find(
+        (u) => u.username === username && u.password === password
+      );
+      if (user) {
+        console.log(`Login successful! Welcome, ${user.username}.`);
+        // todo: add logged in view
+      } else {
+        console.log('Invalid credentials. Please try again.');
+        mainMenu();
+      }
+    });
+  });
+}
 
 mainMenu();
