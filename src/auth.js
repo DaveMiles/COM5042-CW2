@@ -12,7 +12,7 @@ class Auth {
       passwordInput
     );
 
-    return this.users.find(
+    return !!this.users.find(
       (u) => u.username === username && u.password === password
     );
   }
