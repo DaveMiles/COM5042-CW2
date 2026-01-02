@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "Temperature Sensor",
-    "type": "sensor",
+    "type": "thermostat",
     "location": "Living Room",
     "status": "on",
     "owner": "user1",
@@ -11,7 +11,7 @@
   {
     "id": 2,
     "name": "Smart Light",
-    "type": "actuator",
+    "type": "lightbulb",
     "location": "Bedroom",
     "status": "off",
     "owner": "user1"
@@ -38,7 +38,7 @@
   {
     "id": 5,
     "name": "Smart Light",
-    "type": "actuator",
+    "type": "lightbulb",
     "location": "Bedroom",
     "status": "off",
     "owner": "user2"
