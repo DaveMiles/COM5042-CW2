@@ -4,34 +4,34 @@ const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
 
 console.log('Welcome to the Smart Home Automation App!');
 
 function mainMenu() {
-  rl.question(`Select one of the following options:\n  1) Login\n  2) Exit\n> `, (answer) => {
-    switch(answer.trim()) {
-      case '1':
-        login();
-        break;
-      case '2':
-        exit();
-        break;
-      default:
-        console.log('Invalid option, please try again.');
-        mainMenu();
+  rl.question(
+    `Select one of the following options:\n  1) Login\n  2) Exit\n> `,
+    (answer) => {
+      switch (answer.trim()) {
+        case '1':
+          login();
+          break;
+        case '2':
+          exit();
+          break;
+        default:
+          console.log('Invalid option, please try again.');
+          mainMenu();
+      }
     }
-  });
+  );
 }
-
 
 function exit() {
   console.log('Goodbye!');
   rl.close();
 }
-function login() {
-  
-}
+function login() {}
 
 mainMenu();
