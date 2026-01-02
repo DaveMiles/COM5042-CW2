@@ -43,8 +43,8 @@ class SmartHomeApp {
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        const isAuthenticated = Auth.validateCredentials(username, password);
-        if (isAuthenticated) {
+        this.isUserAuthenticated = Auth.validateCredentials(username, password);
+        if (this.isUserAuthenticated) {
           console.log(`Login successful! Welcome, ${username}.`);
           this.deviceManager = new DeviceManager(username);
           this.loggedInMenu();
@@ -65,9 +65,11 @@ class SmartHomeApp {
             console.log(
               `Listing devices...\n${this.deviceManager.listDevices()}`
             );
+            this.loggedInMenu();
             break;
           case '2':
             console.log('Controlling device... (not implemented)');
+            this.loggedInMenu();
             break;
           case '3':
             console.log('Logging out...');
