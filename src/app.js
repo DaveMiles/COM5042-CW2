@@ -69,7 +69,7 @@ class SmartHomeApp {
             break;
           case '2':
             console.log('Controlling device... (not implemented)');
-            this.loggedInMenu();
+            this.controlDevicesMenu();
             break;
           case '3':
             console.log('Logging out...');
@@ -81,6 +81,71 @@ class SmartHomeApp {
         }
       }
     );
+  }
+
+  controlDevicesMenu() {
+    this.rl.question(
+      `Select one of the following options:\n  1) Toggle Device\n  2) Back to Main Menu\n> `,
+      (input) => {
+        switch (input.trim()) {
+          case '1':
+            this.controlDevice();
+            break;
+          case '2':
+            this.controlDevicesMenu();
+            break;
+          case '2':
+            this.loggedInMenu();
+            break;
+          default:
+            console.log('Invalid option, please try again.');
+            this.controlDevicesMenu();
+        }
+      }
+    );
+  }
+
+  controlDevice() {
+    console.log(DeviceManager.listDevices());
+    this.rl.question('Enter Device ID to toggle: ', (deviceId) => {
+      const device = this.deviceManager
+        .getUserDevices()
+        .find((d) => d.id === deviceId.trim());
+      if (device) {
+        switch (device.type) {
+          case 'lightbulb':
+            const currentStatus = device.status;
+            const alternativeStatus = currentStatus === 'on' ? 'off' : 'on';
+            this.rl.question(
+              `Device is ${currentStatus}, would you like to turn it ${alternativeStatus}? (yes/no): `,
+              (answer) => {
+                if (answer.trim().toLowerCase() === 'yes') {
+                  device.status = alternativeStatus;
+                  console.log(`Device turned ${alternativeStatus}.`);
+                } else {
+                  console.log('No changes made to the device.');
+                }
+                this.controlDevicesMenu();
+              }
+            );
+            break;
+          case 'thermostat':
+            // TODO: Implement thermostat control
+            break;
+          case 'alarm':
+            // TODO: Implement alarm control
+            break;
+          case 'camera':
+            // TODO: Implement camera control
+            break;
+          default:
+            console.log('Unknown device type.');
+        }
+      } else {
+        console.log('Device not found.');
+      }
+      this.controlDevicesMenu();
+    });
   }
 }
 
