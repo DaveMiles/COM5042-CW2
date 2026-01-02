@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const Auth = require('./auth.js');
+const DeviceManager = require('./deviceManager.js');
 const readline = require('readline');
 
 class SmartHomeApp {
@@ -45,6 +46,7 @@ class SmartHomeApp {
         const isAuthenticated = Auth.validateCredentials(username, password);
         if (isAuthenticated) {
           console.log(`Login successful! Welcome, ${username}.`);
+          this.deviceManager = new DeviceManager(username);
           this.loggedInMenu();
         } else {
           console.log('Invalid credentials. Please try again.');
@@ -60,7 +62,9 @@ class SmartHomeApp {
       (answer) => {
         switch (answer.trim()) {
           case '1':
-            console.log('Listing devices... (not implemented)');
+            console.log(
+              `Listing devices...\n${this.deviceManager.listDevices()}`
+            );
             break;
           case '2':
             console.log('Controlling device... (not implemented)');

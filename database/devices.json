@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "name": "Temperature Sensor",
+    "type": "sensor",
+    "location": "Living Room",
+    "status": "on",
+    "owner": "user1",
+    "temperature": 22.5
+  },
+  {
+    "id": 2,
+    "name": "Smart Light",
+    "type": "actuator",
+    "location": "Bedroom",
+    "status": "off",
+    "owner": "user1"
+  },
+  {
+    "id": 3,
+    "name": "Security Camera",
+    "type": "camera",
+    "location": "Front Door",
+    "status": "on",
+    "owner": "user1",
+    "recording": true
+  },
+  {
+    "id": 4,
+    "name": "Home Alarm",
+    "type": "alarm",
+    "location": "House",
+    "status": "on",
+    "owner": "user1",
+    "armed": true,
+    "triggered": false
+  },
+  {
+    "id": 5,
+    "name": "Smart Light",
+    "type": "actuator",
+    "location": "Bedroom",
+    "status": "off",
+    "owner": "user2"
+  },
+  {
+    "id": 6,
+    "name": "Security Camera",
+    "type": "camera",
+    "location": "Front Door",
+    "status": "on",
+    "owner": "user2",
+    "recording": true
+  },
+  {
+    "id": 7,
+    "name": "Home Alarm",
+    "type": "alarm",
+    "location": "House",
+    "status": "off",
+    "owner": "user2",
+    "armed": false,
+    "triggered": false
+  }
+]
