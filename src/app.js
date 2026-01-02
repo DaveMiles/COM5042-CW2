@@ -1,8 +1,7 @@
 #!/usr/bin/env node
+const Auth = require('./auth.js');
 
 const readline = require('readline');
-const fs = require('fs');
-const path = require('path');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -35,16 +34,11 @@ function exit() {
   rl.close();
 }
 function login() {
-  const usersPath = path.join(__dirname, '../database/users.json');
-  const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
-
   rl.question('Enter username: ', (username) => {
     rl.question('Enter password: ', (password) => {
-      const user = users.find(
-        (u) => u.username === username && u.password === password
-      );
-      if (user) {
-        console.log(`Login successful! Welcome, ${user.username}.`);
+      const isAuthenticated = Auth.validateCredentials(username, password);
+      if (isAuthenticated) {
+        console.log(`Login successful! Welcome, ${username}.`);
         // todo: add logged in view
       } else {
         console.log('Invalid credentials. Please try again.');
