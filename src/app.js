@@ -10,9 +10,7 @@ const rl = readline.createInterface({
 console.log('Welcome to the Smart Home Automation App!');
 
 function mainMenu() {
-  rl.question(`Select one of the following options: 
-    1) Login 
-    2) Exit`), (answer) => {
+  rl.question(`Select one of the following options:\n  1) Login\n  2) Exit\n> `, (answer) => {
     switch(answer.trim()) {
       case '1':
         login();
@@ -24,7 +22,8 @@ function mainMenu() {
         console.log('Invalid option, please try again.');
         mainMenu();
     }
-}}
+  });
+}
 
 
 function exit() {
