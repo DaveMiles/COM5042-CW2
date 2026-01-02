@@ -45,13 +45,36 @@ class SmartHomeApp {
         const isAuthenticated = Auth.validateCredentials(username, password);
         if (isAuthenticated) {
           console.log(`Login successful! Welcome, ${username}.`);
-          // todo: add logged in view
+          this.loggedInMenu();
         } else {
           console.log('Invalid credentials. Please try again.');
           this.mainMenu();
         }
       });
     });
+  }
+
+  loggedInMenu() {
+    this.rl.question(
+      `Select one of the following options:\n  1) View Devices\n  2) Control Device\n  3) Logout\n> `,
+      (answer) => {
+        switch (answer.trim()) {
+          case '1':
+            console.log('Listing devices... (not implemented)');
+            break;
+          case '2':
+            console.log('Controlling device... (not implemented)');
+            break;
+          case '3':
+            console.log('Logging out...');
+            this.mainMenu();
+            break;
+          default:
+            console.log('Invalid option, please try again.');
+            this.loggedInMenu();
+        }
+      }
+    );
   }
 }
 
