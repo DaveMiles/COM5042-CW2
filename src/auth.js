@@ -6,10 +6,22 @@ class Auth {
     this.users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
   }
 
-  validateCredentials(username, password) {
+  validateCredentials(usernameInput, passwordInput) {
+    const { username, password } = this.sanitiseCredentials(
+      usernameInput,
+      passwordInput
+    );
+
     return this.users.find(
       (u) => u.username === username && u.password === password
     );
+  }
+
+  sanitiseCredentials(usernameInput, passwordInput) {
+    return {
+      username: usernameInput.trim(),
+      password: passwordInput.trim(),
+    };
   }
 }
 
