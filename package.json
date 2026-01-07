@@ -1,0 +1,17 @@
+{
+  "name": "com5042-cw2",
+  "version": "1.0.0",
+  "description": "Coursework 2 for COM5042 - Device Manager App",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "jest"
+  },
+  "author": "David and Joanna",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
