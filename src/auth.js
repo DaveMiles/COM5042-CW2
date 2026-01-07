@@ -1,9 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 class Auth {
   constructor() {
-    const fs = require('fs');
-    const path = require('path');
-    const usersPath = path.join(__dirname, '../database/users.json');
-    this.users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+    this.usersPath = path.join(__dirname, '../database/users.json');
+    this.users = JSON.parse(fs.readFileSync(this.usersPath, 'utf8'));
   }
 
   validateCredentials(usernameInput, passwordInput) {
@@ -25,4 +26,4 @@ class Auth {
   }
 }
 
-module.exports = new Auth();
+module.exports = Auth;
