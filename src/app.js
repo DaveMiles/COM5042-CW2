@@ -43,10 +43,10 @@ class SmartHomeApp {
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        this.isUserAuthenticated = Auth.validateCredentials(username, password);
-        if (this.isUserAuthenticated) {
-          console.log(`Login successful! Welcome, ${username}.`);
-          this.deviceManager = new DeviceManager(username);
+        this.user = Auth.validateCredentials(username, password);
+        if (this.user) {
+          console.log(`Login successful! Welcome, ${this.user.displayName}.`);
+          this.deviceManager = new DeviceManager(this.user.id);
           this.loggedInMenu();
         } else {
           console.log('Invalid credentials. Please try again.');

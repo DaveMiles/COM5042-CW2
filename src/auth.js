@@ -7,22 +7,27 @@ class Auth {
   }
 
   validateCredentials(usernameInput, passwordInput) {
-    const { username, password } = this.sanitiseCredentials(
+    const { username, passwordHash } = this.sanitiseAndHashCredentials(
       usernameInput,
       passwordInput
     );
 
-    return !!this.users.find(
-      (u) => u.username === username && u.password === password
+    return this.users.find(
+      (u) => u.username === username && u.passwordHash === passwordHash
     );
   }
 
-  sanitiseCredentials(usernameInput, passwordInput) {
+  sanitiseAndHashCredentials(usernameInput, passwordInput) {
+    const crypto = require('crypto')
+
+    const passwordHash = crypto.createHash('sha256').update(passwordInput.trim()).digest('hex');
+    
     return {
       username: usernameInput.trim(),
-      password: passwordInput.trim(),
+      passwordHash: passwordHash,
     };
   }
+
 }
 
 module.exports = new Auth();
