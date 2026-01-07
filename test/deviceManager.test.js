@@ -22,9 +22,9 @@ describe('DeviceManager', () => {
     jest.clearAllMocks();
   });
 
-  it.todo('should load devices for the specified user', () => {});
+  it.todo('should load devices for the specified user');
 
-  it.todo('should not load devices for other users', () => {});
+  it.todo('should not load devices for other users');
 
-  it.todo('should list devices in the correct format', () => {});
+  it.todo('should list devices in the correct format');
 });
