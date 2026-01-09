@@ -11,6 +11,7 @@ class SmartHomeApp {
         input: process.stdin,
         output: process.stdout,
       });
+    this.auth = new Auth();
   }
 
   start() {
@@ -45,7 +46,10 @@ class SmartHomeApp {
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        this.isUserAuthenticated = Auth.validateCredentials(username, password);
+        this.isUserAuthenticated = this.auth.validateCredentials(
+          username,
+          password
+        );
         if (this.isUserAuthenticated) {
           console.log(`Login successful! Welcome, ${username}.`);
           this.deviceManager = new DeviceManager(username);
