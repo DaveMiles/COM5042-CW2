@@ -1,5 +1,12 @@
 const SmartHomeApp = require('../src/app');
 
+jest.mock('../src/auth', () => {
+  return jest.fn().mockImplementation(() => ({
+    validateCredentials: jest.fn(),
+  }));
+});
+jest.mock('../src/deviceManager');
+
 describe('SmartHomeApp', () => {
   let mockRl;
   let app;
@@ -17,12 +24,13 @@ describe('SmartHomeApp', () => {
   });
 
   it('should start the app and show main menu', () => {
+    const WELCOME_MESSAGE = `Welcome to the Smart Home Automation App!`;
+
     jest.spyOn(console, 'log').mockImplementation();
     jest.spyOn(app, 'mainMenu');
 
     app.start();
 
-    const WELCOME_MESSAGE = `Welcome to the Smart Home Automation App!`;
     expect(console.log).toHaveBeenCalledWith(WELCOME_MESSAGE);
     expect(app.mainMenu).toHaveBeenCalled();
     expect(mockRl.question).toHaveBeenCalledWith(
@@ -31,8 +39,64 @@ describe('SmartHomeApp', () => {
     );
   });
 
-  it.todo('should handle login with valid credentials');
-  it.todo('should reject login with invalid credentials');
+  it('should handle login with valid credentials', () => {
+    jest.spyOn(console, 'log').mockImplementation();
+
+    const Auth = require('../src/auth');
+    Auth.mockImplementation(() => ({
+      validateCredentials: jest.fn().mockReturnValue(true),
+    }));
+
+    app = new SmartHomeApp(mockRl);
+    jest.spyOn(app, 'loggedInMenu');
+
+    app.login();
+
+    // Get the first question callback (username prompt)
+    const usernameCallback = mockRl.question.mock.calls[0][1];
+    usernameCallback('testuser');
+
+    // Get the second question callback (password prompt)
+    const passwordCallback = mockRl.question.mock.calls[1][1];
+    passwordCallback('testpass');
+
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining('Login successful')
+    );
+    expect(app.loggedInMenu).toHaveBeenCalled();
+    expect(app.isUserAuthenticated).toBe(true);
+  });
+
+  it('should reject login with invalid credentials', () => {
+    jest.spyOn(console, 'log').mockImplementation();
+
+    const Auth = require('../src/auth');
+    Auth.mockImplementation(() => ({
+      validateCredentials: jest.fn().mockReturnValue(false),
+    }));
+
+    app = new SmartHomeApp(mockRl);
+    jest.spyOn(app, 'loggedInMenu');
+    jest.spyOn(app, 'mainMenu');
+
+    app.login();
+
+    // Get the first question callback (username prompt)
+    const usernameCallback = mockRl.question.mock.calls[0][1];
+    usernameCallback('invalid-user');
+
+    // Get the second question callback (password prompt)
+    const passwordCallback = mockRl.question.mock.calls[1][1];
+    passwordCallback('invalid-pass');
+
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining('Invalid credentials')
+    );
+    expect(app.loggedInMenu).not.toHaveBeenCalled();
+    expect(app.isUserAuthenticated).toBe(false);
+    expect(app.mainMenu).toHaveBeenCalled();
+  });
+
   it.todo('should show logged in menu after successful login');
   it.todo('should exit the app and close readline interface');
   it.todo('should display devices in logged in menu');
