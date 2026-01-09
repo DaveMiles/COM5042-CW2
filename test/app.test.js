@@ -30,4 +30,15 @@ describe('SmartHomeApp', () => {
       expect.any(Function)
     );
   });
+
+  it.todo('should handle login with valid credentials');
+  it.todo('should reject login with invalid credentials');
+  it.todo('should show logged in menu after successful login');
+  it.todo('should exit the app and close readline interface');
+  it.todo('should display devices in logged in menu');
+  it.todo('should handle device control selection');
+  it.todo('should toggle lightbulb device status');
+  it.todo('should handle invalid menu options in main menu');
+  it.todo('should handle invalid menu options in logged in menu');
+  it.todo('should return to main menu after logout');
 });
