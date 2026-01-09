@@ -4,11 +4,14 @@ const DeviceManager = require('./deviceManager.js');
 const readline = require('readline');
 
 class SmartHomeApp {
-  constructor() {
-    this.rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+  constructor(rl) {
+    this.rl =
+      rl ||
+      readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+    this.auth = new Auth();
   }
 
   start() {
@@ -43,7 +46,10 @@ class SmartHomeApp {
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        this.isUserAuthenticated = Auth.validateCredentials(username, password);
+        this.isUserAuthenticated = this.auth.validateCredentials(
+          username,
+          password
+        );
         if (this.isUserAuthenticated) {
           console.log(`Login successful! Welcome, ${username}.`);
           this.deviceManager = new DeviceManager(username);
@@ -134,5 +140,9 @@ class SmartHomeApp {
   }
 }
 
-const app = new SmartHomeApp();
-app.start();
+module.exports = SmartHomeApp;
+
+if (require.main === module) {
+  const app = new SmartHomeApp();
+  app.start();
+}
