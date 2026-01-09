@@ -9,13 +9,11 @@ class Auth {
   }
 
   validateCredentials(usernameInput, passwordInput) {
-    const creds = this.sanitiseCredentials(
-      usernameInput,
-      passwordInput
-    );
+    const username = this.sanitiseInput(usernameInput);
+    const password = this.sanitiseInput(passwordInput);
 
-    if (creds) {
-      const { username, password } = creds;
+    // If both the username and password have been validated and are not null
+    if (username && password) {
       const passwordHash = this.hashPassword(password); 
 
       return this.users.find(
@@ -27,16 +25,11 @@ class Auth {
 
   }
 
-  sanitiseCredentials(usernameInput, passwordInput) {
-    const username = String(usernameInput).trim();
-    const password = String(passwordInput).trim();
+  sanitiseInput(userInput) {
+    const input = String(userInput).trim();
 
-    if (username.length >= this.minInputLength && username.length <= this.maxInputLength
-       && password.length >= this.minInputLength && password.length <= this.maxInputLength){
-      return {
-            username: username,
-            password: password,
-          };
+    if (input.length >= this.minInputLength && input.length <= this.maxInputLength){
+      return input;
     }
 
     return null;
