@@ -34,7 +34,7 @@ class Auth {
     }
 
     return null;
-    
+
   }
 
   hashPassword(password) {
@@ -69,6 +69,12 @@ class Auth {
     if (this.users.length === 0) return 0;
 
     return Math.max(...this.users.map(user => user.id)) + 1;
+  }
+
+  checkUsernameAlreadyTaken(username){
+    return this.users.some(u => 
+      u.username === username
+    );
   }
 
 }

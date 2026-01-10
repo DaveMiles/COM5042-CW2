@@ -45,7 +45,13 @@ class SmartHomeApp {
 
   async createAccount(){
     const name = await this.getVaildUserInput('Enter your name: ');
-    const username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    
+    let username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    while (Auth.checkUsernameAlreadyTaken(username)){
+      console.log('Username already taken. Please choose another.');
+      username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    }
+
     const password = await this.getVaildUserInput('Create a password (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
   
     Auth.addUserAccount(name, username, password);
