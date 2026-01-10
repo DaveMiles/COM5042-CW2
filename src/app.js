@@ -21,13 +21,16 @@ class SmartHomeApp {
 
   mainMenu() {
     this.rl.question(
-      `Select one of the following options:\n  1) Login\n  2) Exit\n> `,
+      `Select one of the following options:\n  1) Login\n  2) Create account\n  3) Exit\n> `,
       (answer) => {
         switch (answer.trim()) {
           case '1':
             this.login();
             break;
           case '2':
+            this.createAccount();
+          break;
+          case '3':
             this.exit();
             break;
           default:
@@ -43,16 +46,48 @@ class SmartHomeApp {
     this.rl.close();
   }
 
+  async createAccount(){
+    const name = await this.getVaildUserInput('Enter your name: ');
+    
+    let username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    while (Auth.checkUsernameAlreadyTaken(username)){
+      console.log('Username already taken. Please choose another.');
+      username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    }
+
+    const password = await this.getVaildUserInput('Create a password (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+  
+    Auth.addUserAccount(name, username, password);
+    
+    this.mainMenu();
+  }
+
+  async getVaildUserInput(prompt){
+    let input = null;
+
+    while (input == null){
+      const userAnswer = await new Promise(resolve =>
+        this.rl.question(prompt, resolve)
+      );
+      input = Auth.sanitiseInput(userAnswer);
+
+      if (input == null) {
+        console.log('Invalid input, please try again.');
+      }
+
+    };
+
+    return input;
+  }
+
+
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        this.isUserAuthenticated = this.auth.validateCredentials(
-          username,
-          password
-        );
-        if (this.isUserAuthenticated) {
-          console.log(`Login successful! Welcome, ${username}.`);
-          this.deviceManager = new DeviceManager(username);
+        this.user = Auth.validateCredentials(username, password);
+        if (this.user) {
+          console.log(`Login successful! Welcome, ${this.user.displayName}.`);
+          this.deviceManager = new DeviceManager(this.user.id);
           this.loggedInMenu();
         } else {
           console.log('Invalid credentials. Please try again.');
