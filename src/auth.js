@@ -17,9 +17,8 @@ class Auth {
     if (username && password) {
       const passwordHash = this.hashPassword(password); 
 
-      return this.users.find(
-        (u) => u.username === username && u.passwordHash === passwordHash
-      );
+    return this.users.find(
+        (u) => u.username === username && u.passwordHash === passwordHash) || null
     }
 
     return null;
