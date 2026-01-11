@@ -2,9 +2,9 @@ const fs = require('fs');
 const DeviceManager = require('../src/deviceManager');
 
 const mockDevices = [
-  { id: 1, name: 'Lamp', type: 'Light', owner: 'user1' },
-  { id: 2, name: 'Thermostat', type: 'Climate', owner: 'user2' },
-  { id: 3, name: 'Camera', type: 'Security', owner: 'user1' },
+  { id: 1, name: 'Lamp', type: 'Light', ownerId: 1 },
+  { id: 2, name: 'Thermostat', type: 'Climate', ownerId: 2 },
+  { id: 3, name: 'Camera', type: 'Security', ownerId: 1 },
 ];
 
 jest.mock('fs');
@@ -21,10 +21,10 @@ describe('DeviceManager', () => {
   });
 
   it('should load devices for the specified user', () => {
-    deviceManager = new DeviceManager('user1');
+    deviceManager = new DeviceManager(1);
     const expectedDevices = [
-      { id: 1, name: 'Lamp', type: 'Light', owner: 'user1' },
-      { id: 3, name: 'Camera', type: 'Security', owner: 'user1' },
+      { id: 1, name: 'Lamp', type: 'Light', ownerId: 1 },
+      { id: 3, name: 'Camera', type: 'Security', ownerId: 1 },
     ];
 
     expectedDevices.forEach((device) => {
@@ -33,11 +33,11 @@ describe('DeviceManager', () => {
   });
 
   it('should not load devices for other users', () => {
-    deviceManager = new DeviceManager('user2');
+    deviceManager = new DeviceManager(2);
 
     const notExpectedDevices = [
-      { id: 1, name: 'Lamp', type: 'Light', owner: 'user1' },
-      { id: 3, name: 'Camera', type: 'Security', owner: 'user1' },
+      { id: 1, name: 'Lamp', type: 'Light', ownerId: 1 },
+      { id: 3, name: 'Camera', type: 'Security', ownerId: 1 },
     ];
 
     notExpectedDevices.forEach((device) => {
@@ -46,7 +46,7 @@ describe('DeviceManager', () => {
   });
 
   it('should list devices in the correct format', () => {
-    deviceManager = new DeviceManager('user1');
+    deviceManager = new DeviceManager(1);
     const deviceList = deviceManager.listDevices();
     const expectedList =
       'Lamp (ID: 1, Type: Light)\nCamera (ID: 3, Type: Security)';

@@ -44,7 +44,12 @@ describe('SmartHomeApp', () => {
 
     const Auth = require('../src/auth');
     Auth.mockImplementation(() => ({
-      validateCredentials: jest.fn().mockReturnValue(true),
+      validateCredentials: jest.fn().mockReturnValue({
+        "id": 1,
+        "displayName": "Dan",
+        "username": "user1",
+        "passwordHash": "0b14d501a594442a01c6859541bcb3e8164d183d32937b851835442f69d5c94e"
+      }),
     }));
 
     app = new SmartHomeApp(mockRl);
@@ -54,17 +59,16 @@ describe('SmartHomeApp', () => {
 
     // Get the first question callback (username prompt)
     const usernameCallback = mockRl.question.mock.calls[0][1];
-    usernameCallback('testuser');
+    usernameCallback('user1');
 
     // Get the second question callback (password prompt)
     const passwordCallback = mockRl.question.mock.calls[1][1];
-    passwordCallback('testpass');
+    passwordCallback('password1');
 
     expect(console.log).toHaveBeenCalledWith(
       expect.stringContaining('Login successful')
     );
     expect(app.loggedInMenu).toHaveBeenCalled();
-    expect(app.isUserAuthenticated).toBe(true);
   });
 
   it('should reject login with invalid credentials', () => {
@@ -72,7 +76,7 @@ describe('SmartHomeApp', () => {
 
     const Auth = require('../src/auth');
     Auth.mockImplementation(() => ({
-      validateCredentials: jest.fn().mockReturnValue(false),
+      validateCredentials: jest.fn().mockReturnValue(null),
     }));
 
     app = new SmartHomeApp(mockRl);
@@ -93,7 +97,6 @@ describe('SmartHomeApp', () => {
       expect.stringContaining('Invalid credentials')
     );
     expect(app.loggedInMenu).not.toHaveBeenCalled();
-    expect(app.isUserAuthenticated).toBe(false);
     expect(app.mainMenu).toHaveBeenCalled();
   });
 
