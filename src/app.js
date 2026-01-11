@@ -49,15 +49,15 @@ class SmartHomeApp {
   async createAccount(){
     const name = await this.getVaildUserInput('Enter your name: ');
     
-    let username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
-    while (Auth.checkUsernameAlreadyTaken(username)){
+    let username = await this.getVaildUserInput('Create a username (between ' + this.auth.minInputLength + ' and ' + this.auth.maxInputLength + ' characters): ');
+    while (this.auth.checkUsernameAlreadyTaken(username)){
       console.log('Username already taken. Please choose another.');
-      username = await this.getVaildUserInput('Create a username (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+      username = await this.getVaildUserInput('Create a username (between ' + this.auth.minInputLength + ' and ' + this.auth.maxInputLength + ' characters): ');
     }
 
-    const password = await this.getVaildUserInput('Create a password (between ' + Auth.minInputLength + ' and ' + Auth.maxInputLength + ' characters): ');
+    const password = await this.getVaildUserInput('Create a password (between ' + this.auth.minInputLength + ' and ' + this.auth.maxInputLength + ' characters): ');
   
-    Auth.addUserAccount(name, username, password);
+    this.auth.addUserAccount(name, username, password);
     
     this.mainMenu();
   }
@@ -69,7 +69,7 @@ class SmartHomeApp {
       const userAnswer = await new Promise(resolve =>
         this.rl.question(prompt, resolve)
       );
-      input = Auth.sanitiseInput(userAnswer);
+      input = this.auth.sanitiseInput(userAnswer);
 
       if (input == null) {
         console.log('Invalid input, please try again.');
@@ -84,7 +84,7 @@ class SmartHomeApp {
   login() {
     this.rl.question('Enter username: ', (username) => {
       this.rl.question('Enter password: ', (password) => {
-        this.user = Auth.validateCredentials(username, password);
+        this.user = this.auth.validateCredentials(username, password);
         if (this.user) {
           console.log(`Login successful! Welcome, ${this.user.displayName}.`);
           this.deviceManager = new DeviceManager(this.user.id);
